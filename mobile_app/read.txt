@@ -1,0 +1,1 @@
+the directory contains code for the mobile app
