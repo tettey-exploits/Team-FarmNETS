@@ -59,7 +59,7 @@ Map<String, String> conditionToSentence = {
     'Thunderstorm': 'thunderstorm',
     'Clear': 'clear',
   };
-String getConditionToSentence(String condition) {
+String getConditionInSentence(String condition) {
   String? wordy = conditionToSentence[condition];
   return wordy ?? "Not found";
 }

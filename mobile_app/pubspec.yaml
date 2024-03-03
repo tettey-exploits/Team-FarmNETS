@@ -36,10 +36,7 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-  chat_gpt_sdk: ^2.2.5
-  #dash_chat_2: ^0.0.20
   flutter_sound: ^9.2.13
-  #image_picker: ^1.0.7
   image_picker: ^0.8.6
   path_provider: ^2.1.2
   record: ^4.1.0
@@ -48,24 +45,18 @@ dependencies:
   geolocator: ^11.0.0
   geocoding: ^2.2.0
   lottie: ^3.0.0
-  #permission_handler: ^11.3.0
   permission_handler: ^10.2.0
   image: ^4.1.7
   tflite: ^1.1.2
-  #flutter_tflite: ^1.0.1
   chat_package: ^1.0.0
   google_generative_ai: ^0.2.1
+  flutter_dotenv: ^5.1.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
 
-  # The "flutter_lints" package below contains a set of recommended lints to
-  # encourage good coding practices. The lint set provided by the package is
-  # activated in the `analysis_options.yaml` file located at the root of your
-  # package. See that file for information about deactivating specific lint
-  # rules and activating additional ones.
   flutter_lints: ^2.0.0
 
 flutter_native_splash:
@@ -73,9 +64,6 @@ flutter_native_splash:
   image: assets/AgridisScan_logo.png
   android: true
   ios: true
-
-# For information on the generic Dart part of this file, see the
-# following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter packages.
 flutter:
@@ -92,3 +80,4 @@ flutter:
     - assets/weather_icon.jpg
     - assets/background_weather.jpg
     - assets/
+    - .env

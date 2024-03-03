@@ -1,26 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:test_1/Themes/light_mode.dart';
-//import 'package:test_1/screens/chat_screen.dart';
-import 'package:test_1/screens/chat_screen_2.dart';
+import 'package:test_1/themes/light_mode.dart';
+import 'package:test_1/screens/user_chat_screen.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 
-
-
-void main(){
-
+void main() async {
+  await dotenv.load(fileName: ".env");
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: lightMode, // Assuming LightMode is a ThemeData object
-      home: const ChatPage(),
+      theme: lightMode,
+      home: const UserChatScreen(),
     );
   }
 }

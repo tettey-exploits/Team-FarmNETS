@@ -9,26 +9,34 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:test_1/components/crop_diseases.dart';
-import 'package:test_1/components/services/weather_service.dart';
+import 'package:test_1/services/weather_service.dart';
 import 'package:test_1/components/weather_model.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:test_1/components/try_chat.dart';
+import 'package:test_1/components/chat_message.dart';
 import 'package:tflite/tflite.dart';
-import '../components/digits_to_num.dart';
-import '../components/services/speect_to_text.dart';
-import '../components/services/text_translator.dart';
-import '../components/services/text_to_speech.dart';
+import '../components/convert_utility.dart';
+import '../services/ghana_nlp.dart';
 import 'package:chat_package/chat_package.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-class ChatPage extends StatefulWidget {
-  const ChatPage({Key? key}) : super(key: key);
+class UserChatScreen extends StatefulWidget {
+  const UserChatScreen({Key? key}) : super(key: key);
 
   @override
-  State<ChatPage> createState() => _ChatPageState();
+  State<UserChatScreen> createState() => _UserChatScreenState();
 }
 
-class _ChatPageState extends State<ChatPage> {
+class _UserChatScreenState extends State<UserChatScreen> {
+
+  final _weatherService = WeatherService(dotenv.env['WEATHER_API_KEY']!);
+  Weather? _weather;
+
+  final _textTranslate = TextTranslator(dotenv.env['GH_NLP_API_KEY']!);
+
+  final _textSpeech = TextToSpeech(dotenv.env['GH_NLP_API_KEY']!);
+
+  final _speechText = SpeechToText(dotenv.env['GH_NLP_API_KEY']!);
 
   Future<void> _playWelcomeNote() async {
     String translatedWelcome = await _textTranslate.translateText("Welcome. My name is Abena. How may I help you?");
@@ -37,21 +45,6 @@ class _ChatPageState extends State<ChatPage> {
     const welcomeNotePath = '/storage/emulated/0/Android/data/com.example.test_1/files/audio_recorded/welcome_note_3.wav';
     playRecording(pathToAudio: welcomeNotePath);
   }
-
-  /// api key
-  final _weatherService = WeatherService('51b6adfd3b1af06d26e10abacb4a3813');
-  Weather? _weather;
-
-  //final _textTranslate = TextTranslator('1eb2c5650b6e467db32b87ff60e64f25');
-  //final _textTranslate = TextTranslator('b751d61514ce47cd958348531dad1cb2');
-  final _textTranslate = TextTranslator('63a22bc0561f4844972dc905bb0f5145');
-
-  //final _textSpeech = TextToSpeech('1eb2c5650b6e467db32b87ff60e64f25');
-  //final _textSpeech = TextToSpeech('b751d61514ce47cd958348531dad1cb2');
-  final _textSpeech = TextToSpeech('63a22bc0561f4844972dc905bb0f5145');
-
-  //final _speechText = SpeechToText('b751d61514ce47cd958348531dad1cb2');
-  final _speechText = SpeechToText('63a22bc0561f4844972dc905bb0f5145');
 
   _fetchWeather() async {
     String cityName = await _weatherService.getCurrentCity();
@@ -216,7 +209,7 @@ class _ChatPageState extends State<ChatPage> {
   String? geminiResponseText;
 
   Future<String?> _callGenerativeModel({String? prompt}) async {
-    const String apiKey = "AIzaSyBJnAGPttq6Ha4K6bX4uAQDa-TFOioEtEs";
+    final String apiKey = dotenv.env['GEMINI_API_KEY']!;
 
     // For text-only input, use the gemini-pro model
     final model = GenerativeModel(
@@ -260,6 +253,7 @@ class _ChatPageState extends State<ChatPage> {
   void dispose() {
     super.dispose();
     audioPlayer.dispose();
+    Tflite.close();
   }
 
   @override
@@ -270,7 +264,7 @@ class _ChatPageState extends State<ChatPage> {
         ? getNumberInWords(_weather!.temperature.round().toString())
         : "";
     final weatherInSentence =
-        getConditionToSentence(_weather?.mainConditions ?? "");
+        getConditionInSentence(_weather?.mainConditions ?? "");
     final weatherResponse =
         'The weather condition for today is $weatherInSentence and the temperature is $tempInWords degree celsius';
     setState(() {
@@ -352,7 +346,6 @@ class _ChatPageState extends State<ChatPage> {
                       setState(() {
                         tryChat.messages.add(textMessage);
                       });
-
                       // Call _callGenerativeModel and wait for the response
                       String? geminiResponse = await _callGenerativeModel(prompt: textMessage.text);
 

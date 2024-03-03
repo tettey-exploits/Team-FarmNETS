@@ -2,7 +2,7 @@
 import 'dart:convert';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
-import '../weather_model.dart';
+import 'package:test_1/components/weather_model.dart';
 import 'package:http/http.dart' as http;
 
 class WeatherService{
@@ -19,6 +19,7 @@ class WeatherService{
       throw Exception("Failed to load weather data");
     }
   }
+  
   Future<String> getCurrentCity() async{
 
     // get permission from user
@@ -37,11 +38,5 @@ class WeatherService{
     //extract the city name from the first placemark
     String? city = placemarks[0].locality;
     return city?? "";
-
-
-
-
   }
-
-
 }
